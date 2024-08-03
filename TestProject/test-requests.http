@@ -1,0 +1,24 @@
+@file = test.txt
+# @file = empty.txt
+
+### Get list of files+dirs
+GET http://localhost:5000/api/dir
+content-type: application/json
+
+
+### Upload a file
+POST http://localhost:5000/api/dir/upload
+# content-type: application/json
+content-type: multipart/form-data; boundary=FileBoundary
+
+--FileBoundary
+Content-Disposition: form-data; name="file"; filename="{{file}}"
+Content-Type: text/plain
+
+< ./test-files/{{file}}
+--FileBoundary--
+
+
+
+### Download a file
+GET http://localhost:5000/api/dir/download/{{file}}
