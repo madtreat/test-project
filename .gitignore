@@ -1,0 +1,17 @@
+# editor
+.vs
+.vscode
+
+# generated for app media storage
+FileStorage
+test-downloads
+
+
+# compiler files
+Backup
+UpgradeLog.htm
+bin
+obj
+
+# original template
+TestProject_2024.zip

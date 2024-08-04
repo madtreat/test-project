@@ -1,18 +1,25 @@
 namespace TestProject.Files {
-    public class FileMetadata {
-        public string FileName { get; set; }
-        public string ContentType { get; set; }
-        public long Size { get; set; }
-        public DateTime UploadDate { get; set; }
-        public DateTime LastModifiedDate { get; set; }
 
-        public FileMetadata(string filename, String contentType, long size, DateTime uploadDate) {
-            FileName = filename;
-            ContentType = contentType;
-            Size = size;
-            UploadDate = uploadDate;
-            LastModifiedDate = uploadDate;
-        }
+    public class DirMetadata(string dirName) {
+        public string DirName { get; set; } = dirName;
+    }
+
+    // should this really be a model?
+    public class FileMoveOrCopy(string filePath, string newPath) {
+        public string FilePath { get; set; } = filePath;
+        public string NewPath { get; set; } = newPath;
+    }
+
+    public class FileDelete(string filePath) {
+        public string FilePath { get; set; } = filePath;
+    }
+
+    public class FileMetadata(string filename, String contentType, long size, DateTime uploadDate) {
+        public string FileName { get; set; } = filename;
+        public string ContentType { get; set; } = contentType;
+        public long Size { get; set; } = size;
+        public DateTime UploadDate { get; set; } = uploadDate;
+        public DateTime LastModifiedDate { get; set; } = uploadDate;
 
         public static string GetContentType(string path) {
             var types = new Dictionary<string, string> {

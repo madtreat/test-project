@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
@@ -25,10 +26,24 @@ namespace TestProject.Controllers {
 
         [HttpGet]
         public IActionResult ListFiles() {
-            var files = Directory.GetFiles(_storagePath);
+            string[] files = Directory.GetFiles(_storagePath);
+            string[] dirs = Directory.GetDirectories(_storagePath);
             Console.WriteLine("\n--- dir: " + _storagePath);
-            Console.WriteLine("\n--- files:\n" + files);
-            return Ok();//ControllerContext.MyDisplayRouteInfo();
+            Console.WriteLine("\n--- files:");
+
+            List<string> paths = [];
+            foreach (string file in files) {
+                Console.WriteLine(file);
+                paths.Add("file:" + file);
+            }
+
+            Console.WriteLine("\n--- dirs:");
+            foreach (string dir in dirs) {
+                Console.WriteLine(dir);
+                paths.Add("dir:" + dir);
+            }
+
+            return Ok(paths);//ControllerContext.MyDisplayRouteInfo();
         }
 
         [HttpPost("upload")]
@@ -69,6 +84,81 @@ namespace TestProject.Controllers {
             // reset current position in file
             memory.Position = 0;
             return File(memory, Files.FileMetadata.GetContentType(filePath), fileName);
+        }
+
+        [HttpPost("create")]
+        public IActionResult MakeDirectory(DirMetadata data) {
+            if (data == null) {
+                return BadRequest("Must provide a valid directory name");
+            }
+            if (data.DirName.Length == 0) {
+                return BadRequest("Must provide a non-zero directory name");
+            }
+
+            var fullPath = Path.Combine(_storagePath, data.DirName);
+            Directory.CreateDirectory(fullPath);
+            return Ok(new {
+                data.DirName,
+            });
+        }
+
+        [HttpPost("move")]
+        public IActionResult MoveFile(FileMoveOrCopy data) {
+            if (data == null) {
+                return BadRequest("Must provide data for file move");
+            }
+            if (data.FilePath.Length == 0) {
+                return BadRequest("Must provide a valid file path");
+            }
+            if (data.NewPath.Length == 0) {
+                return BadRequest("Must provide a valid new file path");
+            }
+
+            var fullPathOld = Path.Combine(_storagePath, data.FilePath);
+            var fullPathNew = Path.Combine(_storagePath, data.NewPath);
+
+            Directory.Move(fullPathOld, fullPathNew);
+            return Ok(new {
+                data.NewPath,
+            });
+        }
+
+        [HttpPost("copy")]
+        public IActionResult CopyFile(FileMoveOrCopy data) {
+            if (data == null) {
+                return BadRequest("Must provide data for file move");
+            }
+            if (data.FilePath.Length == 0) {
+                return BadRequest("Must provide a valid file path");
+            }
+            if (data.NewPath.Length == 0) {
+                return BadRequest("Must provide a valid new file path");
+            }
+
+            var fullPathOld = Path.Combine(_storagePath, data.FilePath);
+            var fullPathNew = Path.Combine(_storagePath, data.NewPath);
+
+            System.IO.File.Copy(fullPathOld, fullPathNew);
+            return Ok(new {
+                data.NewPath,
+            });
+        }
+
+        [HttpPost("delete")]
+        public IActionResult DeleteFile(FileDelete data) {
+            if (data == null) {
+                return BadRequest("Must provide data for file delete");
+            }
+            if (data.FilePath.Length == 0) {
+                return BadRequest("Must provide a valid file path");
+            }
+
+            var fileToBeDeleted = Path.Combine(_storagePath, data.FilePath);
+
+            System.IO.File.Delete(fileToBeDeleted);
+            return Ok(new {
+                data.FilePath,
+            });
         }
     }
 }
