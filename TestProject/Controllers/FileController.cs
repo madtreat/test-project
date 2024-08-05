@@ -58,8 +58,8 @@ namespace TestProject.Controllers {
 
                 var file = new FileMetadata(
                     fileInfo.Name.TrimStart('/'),
-                    // FileMetadata.GetContentType(filePath),
-                    "some type",
+                    data.DirName.TrimStart('/'),
+                    FileMetadata.GetContentType(filePath),
                     fileInfo.Length,
                     fileInfo.CreationTime,
                     fileInfo.LastWriteTime
@@ -124,6 +124,7 @@ namespace TestProject.Controllers {
             System.Console.WriteLine("UploadFile file returning...");
             return Ok(new FileMetadata(
                 file.FileName,
+                dirPath,
                 file.ContentType,
                 file.Length,
                 DateTime.Now
@@ -146,7 +147,7 @@ namespace TestProject.Controllers {
                 return BadRequest("Must provide a valid file path");
             }
 
-            var filePath = Path.Combine(_storagePath, data.FilePath);
+            var filePath = Path.Combine(_storagePath, data.FilePath.TrimStart('/'));
 
             if (!System.IO.File.Exists(filePath)) {
                 string error = "File not found: " + data.FilePath;
@@ -281,7 +282,7 @@ namespace TestProject.Controllers {
                 return BadRequest("Must provide a valid file path");
             }
 
-            var fileToBeDeleted = Path.Combine(_storagePath, data.FilePath);
+            var fileToBeDeleted = Path.Combine(_storagePath, data.FilePath.TrimStart('/'));
 
             if (!System.IO.File.Exists(fileToBeDeleted)) {
                 string error = "File does not exist: " + data.FilePath;

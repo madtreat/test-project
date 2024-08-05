@@ -71,13 +71,14 @@ function fetchFiles(currentDir) {
         li.className = "file-item";
         uploadDate = file.uploadDate.substring(0, 10);
         filePath = topLevel ? file.fileName : result.dirName + "/" + file.fileName;
+        filePath = filePath.replace(/^\/+/, ''); // remove leading slashes, as they cause issues finding the files
         console.log("file path: " + filePath)
         li.innerHTML = `
           <span class="file-name">${file.fileName}</span>
           <span class="file-size">${file.length} (Bytes)</span>
           <span class="file-date">uploaded ${uploadDate}</span>
-          <button class="button button-delete" onclick="deleteFile(\'${file.fileName}\')">Delete</button>
-          <button class="button button-download" onclick="downloadFile(\'${file.fileName}\')">Download</button>
+          <button class="button button-delete" onclick="deleteFile(\'${filePath}\')">Delete</button>
+          <button class="button button-download" onclick="downloadFile(\'${filePath}\')">Download</button>
           <button class="button button-download" onclick="moveFile(\'${filePath}\')">Move</button>
           <button class="button button-download" onclick="copyFile(\'${filePath}\')">Copy</button>
         `;
@@ -112,13 +113,16 @@ function uploadFile() {
     method: "POST",
     body: formData,
   })
-    .then(response => response.status === 200 ? response.json() : Promise.reject('error uploading file'))
+    .then(response => response.status === 200 ? response.json() : Promise.reject(response.json().error))
     .then(response => {
       console.log(response)
       fetchFiles();
       alert(`File ${response.fileName} uploaded successfully!`);
     })
-    .catch(error => console.error("Error uploading file: ", file, error));
+    .catch(error => {
+      console.error("Error uploading file: ", file, "error: ", error);
+      alert("Error uploading file: " + file.name + "\nerror: " + error);
+    });
 }
 
 

@@ -74,8 +74,9 @@ namespace TestProject.Files {
     /*
      *  File metadata for viewing and listing, etc. response body
      */
-    public class FileMetadata(string filename, string contentType, long length, DateTime uploadDate, DateTime? lastModDate = null) {
+    public class FileMetadata(string filename, string dirPath, string contentType, long length, DateTime uploadDate, DateTime? lastModDate = null) {
         public string FileName { get; set; } = filename;
+        public string DirPath { get; set; } = dirPath;
         public string ContentType { get; set; } = contentType;
         public long Length { get; set; } = length;
         public DateTime UploadDate { get; set; } = uploadDate;
