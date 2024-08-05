@@ -1,0 +1,93 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 80%;
+  max-width: 900px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.file-input {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #dddddd;
+}
+
+.file-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.file-item {
+  background: #c3f7f4;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dir-item {
+  background: #c4e5d2;
+}
+
+.button {
+  background: #5169ee;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #2b48e9;
+}
+
+.button-delete {
+  background: #ff4d4d;
+}
+
+.button-delete:hover {
+  background: #ff1a1a;
+}
+
+.button-download {
+  background: #4d50ff;
+}
+
+.button-download:hover {
+  background: #1a1eff;
+}
+
+.file-item .file-name {
+  float: left;
+  width: 60%;
+}
+
+.file-item .file-size {
+  width: 20%;
+}
+
+.file-item .file-date {
+  width: 20%;
+}

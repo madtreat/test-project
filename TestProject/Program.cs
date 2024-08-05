@@ -19,20 +19,12 @@ namespace TestProject {
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.MapControllers();
+            app.MapFallbackToFile("index.html");
             app.Run();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-            if (env.IsDevelopment()) {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-            app.UseEndpoints(endpoints => {
-                endpoints.MapControllers();
-            });
-        }
     }
 }

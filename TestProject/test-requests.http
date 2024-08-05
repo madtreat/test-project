@@ -3,12 +3,15 @@
 # without having to jump back and forth to different tabs
 # within PostMan, etc.
 
-
+#
 ### vars
+#
 
-@host = http://localhost:5000
+# @host = http://localhost:5000
+@host = https://localhost:7146
 
 @filename = test.txt
+@filename2 = test2.txt
 @testdirname = testdir01
 
 @file = ./test-files/{{filename}}
@@ -18,10 +21,30 @@
 
 
 
+#
+#
+### requests / tests
+#
+#
 
-### Get list of files+dirs
-GET {{host}}/api/dir
+### Get list of files+dirs at top level
+# GET {{host}}/api/dir
+POST {{host}}/api/dir
 content-type: application/json
+
+
+### Get list of files+dirs at top level
+# GET {{host}}/api/dir?dir=/
+POST {{host}}/api/dir
+content-type: application/json
+
+# {
+#   "dirName": "{{testdirname}}"
+# }
+
+{
+  "dirName": "/"
+}
 
 
 ### Upload a file
@@ -30,7 +53,25 @@ POST {{host}}/api/dir/upload
 content-type: multipart/form-data; boundary=FileBoundary
 
 --FileBoundary
-Content-Disposition: form-data; name="file"; filename="{{file}}"
+Content-Disposition: form-data; name="file"; filename="{{filename}}"
+Content-Type: text/plain
+
+< {{file}}
+--FileBoundary--
+
+
+### Upload a file to a nested dir
+POST {{host}}/api/dir/upload
+# content-type: application/json
+content-type: multipart/form-data; boundary=FileBoundary
+
+--FileBoundary
+Content-Disposition: form-data; name="dir"
+Content-Type: text/plain
+
+{{testdirname}}
+--FileBoundary
+Content-Disposition: form-data; name="file"; filename="{{testdirname}}/{{filename}}"
 Content-Type: text/plain
 
 < {{file}}
@@ -38,7 +79,13 @@ Content-Type: text/plain
 
 
 ### Download a file
-GET {{host}}/api/dir/download/{{file}}
+# GET {{host}}/api/dir/download/{{testdirname}}/{{filename}}
+GET {{host}}/api/dir/download
+content-type: application/json
+
+{
+  "filepath": "{{testdirname}}/{{filename2}}"
+}
 
 
 ### Add a directory
@@ -50,13 +97,22 @@ content-type: application/json
 }
 
 
+### Add a nested directory
+POST {{host}}/api/dir/create
+content-type: application/json
+
+{
+  "dirname": "{{testdirname}}/foo/bar/baz"
+}
+
+
 ### Move a file
 POST {{host}}/api/dir/move
 content-type: application/json
 
 {
-  "filePath": "{{testdirname}}/{{filename}}",
-  "newPath": "{{testdirname}}/{{filename}}.bak"
+  "filePath": "/{{testdirname}}/{{filename}}2",
+  "newPath": "{{testdirname}}/{{filename}}.bak2"
 }
 
 
@@ -64,18 +120,20 @@ content-type: application/json
 POST {{host}}/api/dir/copy
 content-type: application/json
 
+{
+  "filePath": "{{filename}}",
+  "newPath": "{{testdirname}}/{{filename}}2"
+}
+
 # {
-#   "filePath": "{{filename}}",
+#   "filePath": "{{testdirname}}/{{filename}}.bak",
 #   "newPath": "{{testdirname}}/{{filename}}"
 # }
-{
-  "filePath": "{{testdirname}}/{{filename}}.bak",
-  "newPath": "{{testdirname}}/{{filename}}"
-}
 
 
 ### Delete a file
-POST {{host}}/api/dir/delete
+# POST {{host}}/api/dir/delete
+POST https://localhost:7146/api/dir/delete
 content-type: application/json
 
 {

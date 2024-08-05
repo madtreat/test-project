@@ -1,10 +1,32 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FileBrowser</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-    Hello World!
+<div class="container">
+  <h1>Simple File Browser</h1>
+  <div class="file-input">
+      <input type="file" id="fileInput">
+      <button class="button button-download" onclick="uploadFile()">Upload</button>
+      <button class="button button-download" onclick="createDir()">Create Directory</button>
+  </div>
+  <div class="file-count">
+    <span id="file-count">Files: 0</span>
+    <span> | </span>
+    <span id="dir-count">Directories: 0</span>
+    <span> | </span>
+    <span id="current-dir">/</span>
+  </div>
+  <div>
+    <ul class="file-list" id="fileList"></ul>
+  </div>
+</div>
+
+<script src="/js/main.js"></script>
 </body>
 </html>
